@@ -1,0 +1,71 @@
+﻿<Controls:MetroWindow
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        Title="Modern LAPS Manager" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Height="355" Width="800" BorderThickness="0" Background="Black" UseNoneWindowStyle="True">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Amber.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0" Name="HeaderBar" LastChildFill="False" Margin="2" Background="Black">
+            <TextBox Text="Modern LAPS Manager" HorizontalAlignment="Left" VerticalContentAlignment="Top" VerticalAlignment="Top" IsReadOnly="True" BorderThickness="0" FontSize="18" FontFamily="Segoe Print" FontWeight="Bold" IsHitTestVisible="False" Background="Black" Foreground="Orange" Margin="0"/>
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                <Button Name="WinMin" Height="40" Width="50" Padding="2" ToolTip="Minimize" Background="Black" BorderThickness="0">
+                    <iconPacks:PackIconFontAwesome Kind="WindowMinimizeRegular" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
+                </Button>
+                <Button Name="WinClose" Height="40" Width="50" Padding="2" ToolTip="Close" Background="Black" BorderThickness="0">
+                    <iconPacks:PackIconFontAwesome Kind="WindowCloseRegular" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
+                </Button>
+            </StackPanel>
+        </DockPanel>
+        <Grid Grid.Row="1" Background="Black">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Left" HorizontalAlignment="Left">
+                    <ComboBox Name="Combo" Controls:TextBoxHelper.Watermark="Search Field" Controls:TextBoxHelper.UseFloatingWatermark="True" Width="550" Height="40" Margin="5" ItemsSource="{Binding [0]}"/>
+                    <TextBox Name="SearchBox" Controls:TextBoxHelper.Watermark="{Binding [1]}" Controls:TextBoxHelper.UseFloatingWatermark="True" Width="550" Height="40" VerticalContentAlignment="Center" Controls:TextBoxHelper.ClearTextButton="True" CharacterCasing="Upper" />
+
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right">
+                    <Button Name="SearchButton"  Content="Retrieve Password" Width="220" Height="40" FontSize="16"  Margin="5" Foreground="Orange" FontFamily="Segoe Print"/>
+                    <Button Name="RotateButton"  Content="Rotate Password" Width="220" Height="40" FontSize="16"  Margin="5,0,5,0" Foreground="Orange" FontFamily="Segoe Print" IsEnabled="{Binding [11]}" />
+                </StackPanel>
+            </DockPanel>
+        </Grid>
+        <Grid Grid.Row="2" Background="Black">
+            <DataGrid Name="DataGrid" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="150" Margin="5" IsReadOnly="True" CanUserAddRows="False" ItemsSource="{Binding [2].DefaultView}" SelectionMode="Single" SelectedIndex="{Binding [12]}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ComputerName" Binding="{Binding Path=ComputerName}" />
+                    <DataGridTextColumn Header="Serial Number" Binding="{Binding Path=SerialNumber}"/>
+                    <DataGridTextColumn Header="Password Rotation Date (UTC)" Binding="{Binding Path=PasswordRotationDateUTC}" />
+                    <DataGridTextColumn Header="Password Rotation Date (Local)" Binding="{Binding Path=PasswordRotationDateLocal}" />
+                    <DataGridTextColumn Header="Next Password Rotation Date (UTC)" Binding="{Binding Path=NextPasswordRotationDateUTC}" />
+                    <DataGridTextColumn Header="Local Timezone" Binding="{Binding Path=LocalTimezone}" />
+                    <DataGridTextColumn Header="UTC Offset (Hours)" Binding="{Binding Path=UTCOffset}"/>
+                    <DataGridTextColumn Header="Daylight Saving" Binding="{Binding Path=IsDaylightSaving}" />
+                    <DataGridTextColumn Header="Upload Date (UTC)" Binding="{Binding Path=UploadDateUTC}" Width="Auto"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+        <Grid Grid.Row="3" Background="Black">
+            <StackPanel>
+                <TextBox Controls:TextBoxHelper.Watermark="Password" Controls:TextBoxHelper.UseFloatingWatermark="True" Text="{Binding [3]}" Foreground="White" IsReadOnly="True" Margin="5,0,5,0" FontSize="26" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" BorderThickness="0" Background="Black"/>
+                <Controls:MetroProgressBar IsIndeterminate="{Binding [10]}" Height="Auto" Background="Black"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Controls:MetroWindow>
