@@ -1,4 +1,4 @@
-﻿using namespace System.Net
+using namespace System.Net
 using namespace System.Data
 using namespace System.Data.SqlClient
 using namespace System.Security.Cryptography
@@ -14,6 +14,8 @@ $MSI_SECRET = [System.Environment]::GetEnvironmentVariable("MSI_SECRET")
 $ConnectionString = [System.Environment]::GetEnvironmentVariable("SQL Connection String")
 $ClientEncryptionKey = [System.Environment]::GetEnvironmentVariable("Client Encryption Key")
 $ClientEncryptionKeyIV = [System.Environment]::GetEnvironmentVariable("Client Encryption Key IV")
+$PreviousClientEncryptionKey = [System.Environment]::GetEnvironmentVariable("Previous Client Encryption Key")
+$PreviousClientEncryptionKeyIV = [System.Environment]::GetEnvironmentVariable("Previous Client Encryption Key IV")
 $ServerEncryptionKey = [System.Environment]::GetEnvironmentVariable("Server Encryption Key")
 $ServerEncryptionKeyIV = [System.Environment]::GetEnvironmentVariable("Server Encryption Key IV")
 
@@ -72,7 +74,23 @@ Function Decrypt-Data {
 }
 
 # Decrypt password with Client Key
-$DecryptedPassword = Decrypt-Data -Key $ClientEncryptionKey -IVector $ClientEncryptionKeyIV -Data $eventGridEvent.data.Password
+Try
+{
+    $DecryptedPassword = Decrypt-Data -Key $ClientEncryptionKey -IVector $ClientEncryptionKeyIV -Data $eventGridEvent.data.Password -ErrorAction Stop
+}
+# Fallback to previous key in case of key regeneration
+Catch
+{
+    Try
+    {
+        $DecryptedPassword = Decrypt-Data -Key $PreviousClientEncryptionKey -IVector $PreviousClientEncryptionKeyIV -Data $eventGridEvent.data.Password -ErrorAction Stop
+    }
+    Catch
+    {
+        Write-Error $_.Exception.Message
+        Break
+    }
+}
 
 # Encrypt password with Server Key
 $EncryptedPassword = Encrypt-Data -Key $ServerEncryptionKey -IVector $ServerEncryptionKeyIV -Data $DecryptedPassword
